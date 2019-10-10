@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+DCPPATH=$1
+LOGFILE=dcp_inspect_log_$(date +"%Y%m%d_%H%M")
+LOGPATH=
+
+# Verify if a path is provided as an argument
+if $1
+then
+	echo "Please provide a complete DCP path"	
+	exit 1
+fi
+
+if ls $1/ | grep "CPL"; then
+	docker container run --rm -it -v $DCPPATH:/dcp dctd dcp_inspect -l /dcp/$LOGFILE /dcp/
+else
+	echo "Please provide a valid DCP path"
+fi

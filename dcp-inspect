@@ -2,8 +2,9 @@
 
 
 DCPPATH=$1
-LOGFILE=dcp_inspect_log_$(date +"%Y%m%d_%H%M")
-LOGPATH=
+LOGFILE=$(find $1 -name "CPL*.xml" -exec basename {} \; | cut -f 1 -d '.')_$(date +"%Y%m%d_%H%M").log
+LOGPATH="/mnt/BRAVO/di/zz_logs/dcp_inspect_logs"
+
 
 # Verify if a path is provided as an argument
 if $1
@@ -12,8 +13,9 @@ then
 	exit 1
 fi
 
+
 if ls $1/ | grep "CPL"; then
-	docker container run --rm -it -v $DCPPATH:/dcp dctd dcp_inspect -l /dcp/$LOGFILE /dcp/
+	docker container run --rm -it -v $DCPPATH:/dcp -v $LOGPATH:/log jeajar/dcdt dcp_inspect -l /log/$LOGFILE /dcp/
 else
 	echo "Please provide a valid DCP path"
 fi
